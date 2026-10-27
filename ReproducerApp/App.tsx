@@ -1,44 +1,40 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { useState } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 function App() {
-  const isDarkMode = useColorScheme() === 'dark';
+  const [lastKey, setLastKey] = useState('none');
+  const [taps, setTaps] = useState(0);
 
   return (
     <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
+      <SafeAreaView style={styles.screen}>
+        <View
+          onKeyDown={event => setLastKey(event.nativeEvent.key)}
+          style={styles.screen}
+          testID="root">
+          <Pressable
+            onPress={() => setTaps(count => count + 1)}
+            style={styles.button}
+            testID="tap-target">
+            <Text>Tapped {taps} times</Text>
+          </Pressable>
+          <Text testID="last-key">Last key: {lastKey}</Text>
+        </View>
+      </SafeAreaView>
     </SafeAreaProvider>
   );
 }
 
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
-
-  return (
-    <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
-  container: {
+  screen: {
     flex: 1,
+    gap: 16,
+    padding: 24,
+  },
+  button: {
+    borderWidth: 1,
+    padding: 16,
   },
 });
 
